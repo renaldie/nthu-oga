@@ -1,2 +1,2 @@
-# nthu-oga
+# NTHU OGA News Tracker
 Monitor NTHU OGA News
