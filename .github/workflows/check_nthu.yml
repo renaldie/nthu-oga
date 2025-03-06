@@ -58,10 +58,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Updates in NTHU OGA Posts
-          to: ${{ secrets.EMAIL_RECIPIENT }}
+          subject: Updates in NYCU OIA Jobs
+          to: ${{ secrets.EMAIL_USERNAME }}
           from: GitHub Action
           body: ${{ env.NOTIFICATION_CONTENT }}
-          # Add security settings
-          secure: true
-          content_type: text/plain
