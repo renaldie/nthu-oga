@@ -1,8 +1,8 @@
 name: Check NTHU OGA Posts
 on:
   schedule:
-    - cron: '0 16 * * *'
-  workflow_dispatch:
+    - cron: '0 16 * * *'  # Runs at 8:00 UTC (adjust as needed)
+  workflow_dispatch:  # Allows manual triggering
 
 permissions:
   contents: write
@@ -24,22 +24,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4
 
+      - name: Create data directory
+        run: mkdir -p data
+        
       - name: Check NTHU OGA posts
         run: |
-          # Save output separately to extract notification content
-          scrape_output=$(python scripts/check_nthu.py 2>&1)
+          # Run the script and capture both stdout and stderr
+          python scripts/check_nthu.py > output.txt 2>&1
+          cat output.txt
           
-          # Extract only the notification part (everything after "Updates in NTHU OGA Posts")
-          notification_content=$(echo "$scrape_output" | sed -n '/Updates in NTHU OGA Posts/,$p')
-          
-          if [[ -n "$notification_content" ]]; then
+          # Check if the script identified any updates
+          if grep -q "Updates in NTHU OGA Posts" output.txt; then
+            # Extract only the notification part
+            notification_content=$(sed -n '/Updates in NTHU OGA Posts/,$p' output.txt)
             echo "NOTIFICATION_CONTENT<<EOF" >> $GITHUB_ENV
             echo "$notification_content" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
           fi
 
       - name: Send email
-        if: env.NOTIFICATION_CONTENT != ''
+        if: env.CHANGES_DETECTED == 'true'
         uses: dawidd6/action-send-mail@v4
         with:
           server_address: smtp.gmail.com
