@@ -12,12 +12,15 @@ jobs:
   check_changes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper git operations
       
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10'  # Specify exact version
           
       - name: Install dependencies
         run: |
@@ -27,23 +30,27 @@ jobs:
       - name: Create data directory
         run: mkdir -p data
         
-      - name: Check NTHU OGA posts
+      - name: Run scraper
         run: |
-          # Run the script and capture both stdout and stderr
+          # Run the script and capture output
           python scripts/check_nthu.py > output.txt 2>&1
           cat output.txt
           
+      - name: Check for notification content
+        run: |
           # Check if the script identified any updates
           if grep -q "Updates in NTHU OGA Posts" output.txt; then
             # Extract only the notification part
-            notification_content=$(sed -n '/Updates in NTHU OGA Posts/,$p' output.txt)
+            notification_content=$(grep -A 20 "Updates in NTHU OGA Posts" output.txt)
+            
             echo "NOTIFICATION_CONTENT<<EOF" >> $GITHUB_ENV
             echo "$notification_content" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+            
             echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
           fi
 
-      - name: Send email
+      - name: Send email notification
         if: env.CHANGES_DETECTED == 'true'
         uses: dawidd6/action-send-mail@v4
         with:
