@@ -43,15 +43,12 @@ jobs:
             # Extract only the notification part
             notification_content=$(grep -A 20 "Updates in NTHU OGA Posts" output.txt)
             
-            echo "NOTIFICATION_CONTENT<<EOF" >> $GITHUB_ENV
-            echo "$notification_content" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-            
-            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-          fi
+          echo "NOTIFICATION_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$notification_content" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-      - name: Send email notification
-        if: env.CHANGES_DETECTED == 'true'
+      - name: Send email
+        if: env.NOTIFICATION_CONTENT != ''
         uses: dawidd6/action-send-mail@v4
         with:
           server_address: smtp.gmail.com
