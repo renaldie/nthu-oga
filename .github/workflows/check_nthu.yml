@@ -33,7 +33,7 @@ jobs:
       - name: Run scraper
         run: |
           # Run the script and capture output
-          python scripts/check_nthu.py > output.txt 2>&1
+          python .github/scripts/check_nthu.py > output.txt 2>&1
           cat output.txt
           
       - name: Check for notification content
@@ -58,7 +58,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Updates in NYCU OIA Jobs
+          subject: Updates in NTHU OGA
           to: ${{ secrets.EMAIL_USERNAME }}
-          from: GitHub Action
+          from: nthu-oga
           body: ${{ env.NOTIFICATION_CONTENT }}
