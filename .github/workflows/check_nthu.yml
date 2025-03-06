@@ -60,5 +60,5 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: Updates in NTHU OGA
           to: ${{ secrets.EMAIL_USERNAME }}
-          from: nthu-oga
+          from: Github nthu-oga
           body: ${{ env.NOTIFICATION_CONTENT }}
