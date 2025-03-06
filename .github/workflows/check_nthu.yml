@@ -62,5 +62,3 @@ jobs:
           to: ${{ secrets.EMAIL_USERNAME }}
           from: Github nthu-oga
           body: ${{ env.NOTIFICATION_CONTENT }}
-          secure: true
-          content_type: text/plain
