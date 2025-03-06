@@ -46,9 +46,12 @@ jobs:
             echo "NOTIFICATION_CONTENT<<EOF" >> $GITHUB_ENV
             echo "$notification_content" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+            
+            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          fi
 
-      - name: Send email
-        if: env.NOTIFICATION_CONTENT != ''
+      - name: Send email notification
+        if: env.CHANGES_DETECTED == 'true'
         uses: dawidd6/action-send-mail@v4
         with:
           server_address: smtp.gmail.com
