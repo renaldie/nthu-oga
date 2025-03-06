@@ -59,6 +59,9 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: Updates in NTHU OGA Posts
-          to: ${{ secrets.EMAIL_USERNAME }}
+          to: ${{ secrets.EMAIL_RECIPIENT }}
           from: GitHub Action
           body: ${{ env.NOTIFICATION_CONTENT }}
+          # Add security settings
+          secure: true
+          content_type: text/plain
