@@ -1,7 +1,7 @@
 name: Check NTHU OGA Posts
 on:
   schedule:
-    - cron: '0 16 * * *'  # Runs at 8:00 UTC (adjust as needed)
+    - cron: '0 16 * * *'  # Runs at 16:00 UTC (adjust as needed)
   workflow_dispatch:  # Allows manual triggering
 
 permissions:
@@ -62,3 +62,6 @@ jobs:
           to: ${{ secrets.EMAIL_USERNAME }}
           from: Github nthu-oga
           body: ${{ env.NOTIFICATION_CONTENT }}
+          # Add security settings
+          secure: true
+          content_type: text/plain
